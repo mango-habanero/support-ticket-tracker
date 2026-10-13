@@ -1,0 +1,43 @@
+### Build output ###
+# Maven writes compiled classes and packaged artefacts here.
+target/
+
+### Eclipse and Spring Tool Suite ###
+# Project metadata that these IDEs generate per machine.
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+# Project metadata that IntelliJ generates per machine.
+*.iml
+*.ipr
+*.iws
+.idea/
+
+### Logs ###
+# JVM crash reports and tool output. The application logs to the console only.
+*.log
+
+### Maven wrapper ###
+# The wrapper script downloads this JAR on first run. The properties file stays tracked.
+.mvn/wrapper/maven-wrapper.jar
+
+### Operating system ###
+# Files that the file manager creates.
+.DS_Store
+Thumbs.db
+
+### Secrets and environment ###
+# Local environment values never enter the repository. Only .env.example stays tracked.
+.env
+.env.*.local
+.env.local
+
+### Visual Studio Code ###
+# Editor settings that VS Code stores per machine.
+.vscode/

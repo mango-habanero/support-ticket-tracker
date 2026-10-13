@@ -1,0 +1,28 @@
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+server:
+  port: ${SERVER_PORT:8095}
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: ticket-tracker
+
+  datasource:
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: ticket_tracker
+
+  liquibase:
+    change-log: classpath:database/changelog/changelog-main.yaml

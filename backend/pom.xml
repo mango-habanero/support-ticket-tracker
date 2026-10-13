@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>4.1.1</version>
+    <relativePath />
+  </parent>
+
+  <groupId>com.lodwar</groupId>
+  <artifactId>tickettracker</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>tickettracker</name>
+  <description>Mini Ticket Tracker backend service</description>
+
+  <properties>
+    <google-java-format.version>1.35.0</google-java-format.version>
+    <java.version>21</java.version>
+    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    <mapstruct.version>1.6.3</mapstruct.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <spotless.plugin.version>3.3.0</spotless.plugin.version>
+  </properties>
+
+  <dependencies>
+
+    <!-- Web and API: serves the REST contract and validates its input. -->
+
+    <!-- Enforces Bean Validation constraints on request records and filters. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <!-- Serves the REST endpoints and embeds the servlet container. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc</artifactId>
+    </dependency>
+
+    <!-- Persistence: stores tickets in PostgreSQL and owns the schema through migrations. -->
+
+    <!-- Connects to PostgreSQL 17. Runtime scope keeps the driver off the compilation classpath. -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- Provides the repository abstraction and Hibernate mapping for the Ticket entity. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <!-- Applies the changelog at startup, which creates the service schema and its CHECK constraints. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-liquibase</artifactId>
+    </dependency>
+
+    <!-- Operations: reports whether the service is ready to receive traffic. -->
+
+    <!-- Exposes the health endpoint that Docker Compose polls before it starts the frontend. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- Code generation: removes boilerplate at compile time. The processors are configured in the compiler plugin. -->
+
+    <!-- Generates accessors, constructors and builders. Provided scope keeps it out of the packaged JAR. -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Supplies the annotations that the MapStruct processor turns into mapper implementations. -->
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${mapstruct.version}</version>
+    </dependency>
+
+    <!-- Testing: runs endpoint tests against a real PostgreSQL instance. Every entry carries test scope. -->
+
+    <!-- Provides MockMvc support for endpoint tests without a running server. Brings the core test starter, JUnit 5 and AssertJ transitively. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Binds a container to the application datasource through @ServiceConnection. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-testcontainers</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Starts and stops containers around JUnit 5 tests. -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Provides the PostgreSQL 17 container, so CHECK constraint and pagination behaviour match production. -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers-postgresql</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Runs the annotation processors in a fixed order: Lombok, then its binding, then MapStruct. The binding makes MapStruct wait for Lombok's generated accessors. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>${lombok-mapstruct-binding.version}</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${mapstruct.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <!-- Fails the build at verify when Java, Markdown or POM files break the formatting rules. Run spotless:apply to fix them. -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.plugin.version}</version>
+        <configuration>
+          <formats>
+            <format>
+              <includes>
+                <include>*.md</include>
+                <include>.gitignore</include>
+                <include>.gitattributes</include>
+              </includes>
+              <trimTrailingWhitespace />
+              <endWithNewline />
+            </format>
+          </formats>
+          <java>
+            <includes>
+              <include>src/main/java/**/*.java</include>
+              <include>src/test/java/**/*.java</include>
+            </includes>
+            <googleJavaFormat>
+              <version>${google-java-format.version}</version>
+              <style>GOOGLE</style>
+              <reflowLongStrings>true</reflowLongStrings>
+              <formatJavadoc>false</formatJavadoc>
+            </googleJavaFormat>
+            <importOrder>
+              <order>java,javax,jakarta,org,com,</order>
+            </importOrder>
+            <removeUnusedImports>
+              <engine>google-java-format</engine>
+            </removeUnusedImports>
+            <forbidWildcardImports />
+            <formatAnnotations />
+            <trimTrailingWhitespace />
+            <endWithNewline />
+          </java>
+          <pom>
+            <sortPom>
+              <expandEmptyElements>false</expandEmptyElements>
+              <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+            </sortPom>
+          </pom>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Repackages the application as an executable JAR. Layered output is on by default and feeds the Docker build. -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>
