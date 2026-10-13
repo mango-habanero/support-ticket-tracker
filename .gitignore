@@ -1,0 +1,8 @@
+# Local environment for Docker Compose. Compose reads this file to substitute variables.
+.env
+
+# Editor state and operating system files.
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db
