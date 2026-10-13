@@ -1,0 +1,11 @@
+# keeps build output, IDE state, wrapper files, tests and environment files out of the build context.
+**/*.iml
+**/.env*
+.idea/
+.mvn/
+.vscode/
+HELP.md
+mvnw
+mvnw.cmd
+src/test/
+target/
