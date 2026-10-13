@@ -102,13 +102,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Starts and stops containers around JUnit 5 tests. -->
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>testcontainers-junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-
     <!-- Provides the PostgreSQL 17 container, so CHECK constraint and pagination behaviour match production. -->
     <dependency>
       <groupId>org.testcontainers</groupId>
