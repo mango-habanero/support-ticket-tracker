@@ -60,3 +60,11 @@ The API reads five environment variables.
 | `SPRING_PROFILES_ACTIVE`     | None    | The value `local` loads 40 sample tickets on first start. Without the variable, the database starts empty. |
 
 The example file holds a local database password. Change it together with the `POSTGRES_PASSWORD` value in the database command.
+
+## Tests
+
+This section assumes that Docker is running. The tests start their own PostgreSQL 17 container.
+
+```bash
+./mvnw test
+```
