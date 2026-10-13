@@ -1,0 +1,47 @@
+services:
+  backend:
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8095
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-lodwar_ticket_tracker}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_PROFILES_ACTIVE: local
+    healthcheck:
+      interval: 10s
+      retries: 12
+      start_period: 30s
+      test: ["CMD", "curl", "-fs", "http://localhost:8095/api/v1/actuator/health"]
+      timeout: 5s
+    ports:
+      - "8095:8095"
+
+  db:
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-lodwar_ticket_tracker}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+    healthcheck:
+      interval: 5s
+      retries: 10
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      timeout: 5s
+    image: postgres:17
+    volumes:
+      - ticket-tracker-data:/var/lib/postgresql/data
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      API_BASE_URL: http://backend:8095/api/v1
+    ports:
+      - "3000:3000"
+
+volumes:
+  ticket-tracker-data:
