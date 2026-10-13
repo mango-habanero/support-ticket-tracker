@@ -1,0 +1,7 @@
+# Keeps local dependencies, build output, environment files and editor state out of the build context.
+.env*
+.git
+.idea
+.next
+.vscode
+node_modules
