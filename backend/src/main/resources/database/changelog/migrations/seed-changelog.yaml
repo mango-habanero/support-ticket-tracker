@@ -1,0 +1,10 @@
+databaseChangeLog:
+    - changeSet:
+          author: Philip Wafula
+          changes:
+              - sqlFile:
+                    dbms: postgresql
+                    path: seed/01-tickets.sql
+                    relativeToChangelogFile: true
+          context: '@local'
+          id: 01-tickets

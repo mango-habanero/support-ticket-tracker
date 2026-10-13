@@ -1,0 +1,24 @@
+databaseChangeLog:
+    - changeSet:
+          author: Philip Wafula
+          changes:
+              - sqlFile:
+                    dbms: postgresql
+                    path: schema/00-schema.sql
+                    relativeToChangelogFile: true
+          id: 00-schema
+          rollback:
+              - sql:
+                    sql: DROP SCHEMA ticket_tracker;
+
+    - changeSet:
+          author: Philip Wafula
+          changes:
+              - sqlFile:
+                    dbms: postgresql
+                    path: schema/01-tickets.sql
+                    relativeToChangelogFile: true
+          id: 01-tickets
+          rollback:
+              - sql:
+                    sql: DROP TABLE ticket_tracker.tickets;
